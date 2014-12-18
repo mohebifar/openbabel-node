@@ -1,0 +1,27 @@
+{
+  "name": "openbabel",
+  "version": "1.0.0",
+  "description": "An OpenBabel port for Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "node-gyp rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://mohebifar@bitbucket.org/mohebifar/openbabel-node.git"
+  },
+  "keywords": [
+    "chemistry",
+    "openbabel",
+    "mmff94",
+    "forcefield"
+  ],
+  "author": "Mohamad Mohebifar <netfars@gmail.com> (http://mohebifar.ir/)",
+  "license": "MIT",
+  "dependencies": {
+    "bindings": "^1.2.1",
+    "nan": "^1.4.1"
+  },
+  "gypfile": true
+}
