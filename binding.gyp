@@ -3,12 +3,15 @@
     {
       "target_name": "openbabel",
       "sources": [
-        "src/addon.cpp",
         "src/conversion.cpp",
         "src/atom.cpp",
-        "src/mol.cpp"
+        "src/mol.cpp",
+        "src/addon.cpp"
       ],
-      "include_dirs": ["<!(node -e \"require('nan')\")"],
+      "libraries": [
+        "-lopenbabel"
+      ],
+      "include_dirs": ["<!(node -e \"require('nan')\")", "/usr/local/lib/openbabel/2.3.2", "/usr/local/include/openbabel-2.0"],
       "conditions": [
         ['OS=="win"', {
 
