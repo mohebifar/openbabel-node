@@ -13,6 +13,11 @@ namespace OBBinding {
     Conversion::~Conversion() {
     }
 
+    Conversion* Conversion::Unwrap(Local < Object > obj) {
+        Conversion *conversion = node::ObjectWrap::Unwrap<Conversion>(obj);
+        return conversion;
+    }
+
     void Conversion::Init(Handle < Object > exports) {
         NanScope();
 
@@ -20,62 +25,104 @@ namespace OBBinding {
         Local <FunctionTemplate> tpl = NanNew<FunctionTemplate>(New);
         tpl->SetClassName(NanNew("Conversion"));
         tpl->InstanceTemplate()->SetInternalFieldCount(2);
+        tpl->Set("test", NanNew("Asdsdasd"));
 
         // Prototype
         NODE_SET_PROTOTYPE_METHOD(tpl, "read", Read);
         NODE_SET_PROTOTYPE_METHOD(tpl, "setInFormat", SetInFormat);
+        NODE_SET_PROTOTYPE_METHOD(tpl, "setOutFormat", SetOutFormat);
+        NODE_SET_PROTOTYPE_METHOD(tpl, "write", Write);
 
         NanAssignPersistent(constructor, tpl->GetFunction());
         exports->Set(NanNew("Conversion"), tpl->GetFunction());
     }
 
     NAN_METHOD(Conversion::New) {
-            NanScope();
+        NanScope();
 
-            if (args.IsConstructCall()) {
-                // Invoked as constructor: `new Conversion(...)`
-                //        double value = args[0]->IsUndefined() ? 0 : args[0]->NumberValue();
-                Conversion *obj = new Conversion();
-                obj->Wrap(args.This());
-            }
+        if (args.IsConstructCall()) {
+            Conversion *obj = new Conversion();
+            obj->Wrap(args.This());
+        }
 
-            NanReturnValue(args.This());
-
+        NanReturnValue(args.This());
     }
 
     NAN_METHOD(Conversion::Read) {
-            NanScope();
+        NanScope();
 
-            std::string str = std::string(*v8::String::AsciiValue(args[0]->ToString()));
+        std::string str = std::string(*v8::String::AsciiValue(args[0]->ToString()));
 
-            Conversion* obj = ObjectWrap::Unwrap<Conversion>(args.Holder());
-            if (args[1]->IsObject()) {
-                Mol *molObj = node::ObjectWrap::Unwrap<Mol>(args[1]->ToObject());
-                obj->ob->ReadString(molObj->ob, str);
-                NanReturnValue(args[1]->ToObject());
-            } else {
-                OBMol *mol = new OBMol();
-                Local <Object> instance = Mol::NewInstance(mol);
+        Conversion* obj = Unwrap(args.Holder());
+        if (args[1]->IsObject()) {
+            Mol *molObj = Mol::Unwrap(args[1]->ToObject());
+            obj->ob->ReadString(molObj->ob, str);
+            NanReturnValue(args[1]->ToObject());
+        } else {
+            OBMol *mol = new OBMol();
+            Handle <Object> instance = Mol::NewInstance(mol);
+            obj->ob->ReadString(mol, str);
 
-                obj->ob->ReadString(mol, str);
-
-                NanReturnValue(instance);
-            }
-
+            NanReturnValue(instance);
+        }
     }
 
     NAN_METHOD(Conversion::SetInFormat) {
-            NanScope();
+        NanScope();
 
-            Conversion* obj = ObjectWrap::Unwrap<Conversion>(args.Holder());
+        Conversion* obj = Unwrap(args.Holder());
 
-            std::string str = std::string(*v8::String::AsciiValue(args[0]->ToString()));
+        std::string str = std::string(*v8::String::AsciiValue(args[0]->ToString()));
 
-            const char *format = str.c_str();
-            obj->ob->SetInFormat(format);
-            obj->_in_format = args[0]->ToString();
+        const char *format = str.c_str();
+        obj->_in_format = args[0]->ToString();
 
+
+        if (obj->ob->SetInFormat(format)) {
             NanReturnValue(args.This());
+        } else {
+            NanReturnValue(NanThrowError("The Input format is invalid."));
+        }
+
+    }
+
+    NAN_METHOD(Conversion::SetOutFormat) {
+        NanScope();
+
+        Conversion* obj = Unwrap(args.Holder());
+
+        std::string str = std::string(*v8::String::AsciiValue(args[0]->ToString()));
+
+        const char *format = str.c_str();
+        obj->_in_format = args[0]->ToString();
+
+
+        if (obj->ob->SetOutFormat(format)) {
+            NanReturnValue(args.This());
+        } else {
+            NanReturnValue(NanThrowError("The Input format is invalid."));
+        }
+
+    }
+
+    NAN_METHOD(Conversion::Write) {
+        NanScope();
+
+        bool trimWhitespace = false;
+
+        Conversion* obj = Unwrap(args.Holder());
+
+        if (args[0]->IsObject()) {
+            if(args[1]->IsBoolean()) {
+                trimWhitespace = args[1]->BooleanValue();
+            }
+
+            Mol *molObj = Mol::Unwrap(args[0]->ToObject());
+            std::string str = obj->ob->WriteString(molObj->ob, trimWhitespace);
+            NanReturnValue(NanNew(str));
+        } else {
+            NanReturnValue(NanThrowError("Invalid Arguments"));
+        }
     }
 
 }

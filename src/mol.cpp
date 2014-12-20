@@ -1,3 +1,4 @@
+#include <v8.h>
 #include "mol.h"
 
 using namespace v8;
@@ -14,16 +15,25 @@ namespace OBBinding {
         delete ob;
     }
 
-    Local <Object> Mol::NewInstance(OBMol * mol) {
+    Mol* Mol::Unwrap(Local < Object > obj) {
+        Mol *mol = node::ObjectWrap::Unwrap<Mol>(obj);
+        return mol;
+    }
+
+    Local <Object> Mol::NewInstance(OBMol *mol) {
         NanEscapableScope();
+
+        Local <Function> cons = NanNew < Function > (constructor);
+        Local <Object> instance;
 
         const unsigned argc = 0;
         Local <Value> argv[argc] = {};
-        Local <Function> cons = NanNew<Function>(constructor);
-        Local <Object> instance = cons->NewInstance(argc, argv);
+        instance = cons->NewInstance(argc, argv);
 
-        Mol *obj = ObjectWrap::Unwrap<Mol>(instance);
+        Mol *obj = Unwrap(instance);
+
         obj->ob = mol;
+
 
         return NanEscapeScope(instance);
     }
@@ -32,7 +42,7 @@ namespace OBBinding {
         NanScope();
 
         // Prepare constructor template
-        Local <FunctionTemplate> tpl = NanNew<FunctionTemplate>(New);
+        Local <FunctionTemplate> tpl = NanNew < FunctionTemplate > (New);
         tpl->SetClassName(NanNew("Mol"));
         tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
@@ -40,55 +50,70 @@ namespace OBBinding {
         tpl->PrototypeTemplate()->SetAccessor(NanNew("molWeight"), GetMolWeight);
         tpl->PrototypeTemplate()->SetAccessor(NanNew("atomsCount"), GetAtomsCount);
         tpl->PrototypeTemplate()->SetAccessor(NanNew("enery"), GetEnergy);
-        tpl->PrototypeTemplate()->Set(NanNew("isChiral"), NanNew<FunctionTemplate>(IsChiral)->GetFunction());
-        tpl->PrototypeTemplate()->Set(NanNew("addHydrogens"), NanNew<FunctionTemplate>(AddHydrogens)->GetFunction());
+        tpl->PrototypeTemplate()->Set(NanNew("isChiral"), NanNew < FunctionTemplate > (IsChiral)->GetFunction());
+        tpl->PrototypeTemplate()->Set(NanNew("addHydrogens"), NanNew < FunctionTemplate > (AddHydrogens)->GetFunction());
+        tpl->PrototypeTemplate()->Set(NanNew("getAtoms"), NanNew < FunctionTemplate > (GetAtoms)->GetFunction());
 
         NanAssignPersistent(constructor, tpl->GetFunction());
         exports->Set(NanNew("Molecule"), tpl->GetFunction());
     }
 
     NAN_METHOD(Mol::New) {
-            NanScope();
+        NanScope();
 
-            Mol* obj = new Mol();
-            obj->Wrap(args.This());
+        Mol *obj = new Mol();
+        obj->Wrap(args.This());
 
-            NanReturnValue(args.This());
+        NanReturnValue(args.This());
     }
 
     NAN_METHOD(Mol::AddHydrogens) {
-            NanScope();
+        NanScope();
 
-            Mol* obj = ObjectWrap::Unwrap<Mol>(args.This());
-            NanReturnValue(NanNew(obj->ob->AddHydrogens()));
+        Mol *obj = Unwrap(args.This());
+        NanReturnValue(NanNew(obj->ob->AddHydrogens()));
     }
 
     NAN_METHOD(Mol::IsChiral) {
-            NanScope();
+        NanScope();
 
-            Mol* obj = ObjectWrap::Unwrap<Mol>(args.This());
-            NanReturnValue(NanNew(obj->ob->IsChiral()));
+        Mol *obj = Unwrap(args.This());
+        NanReturnValue(NanNew(obj->ob->IsChiral()));
+    }
+
+    NAN_METHOD(Mol::GetAtoms) {
+        NanScope();
+
+        Mol *obj = Unwrap(args.This());
+
+        Local<Array> list = Array::New(obj->ob->NumAtoms());
+
+        FOR_ATOMS_OF_MOL (atom, obj->ob) {
+            list->Set(atom->GetIdx() - 1, Atom::NewInstance(&*atom));
+        }
+
+        NanReturnValue(list);
     }
 
     NAN_GETTER(Mol::GetMolWeight) {
-            NanScope();
+        NanScope();
 
-            Mol* obj = ObjectWrap::Unwrap<Mol>(args.This());
-            NanReturnValue(NanNew(obj->ob->GetMolWt()));
+        Mol *obj = Unwrap(args.This());
+        NanReturnValue(NanNew(obj->ob->GetMolWt()));
     }
 
     NAN_GETTER(Mol::GetAtomsCount) {
-            NanScope();
+        NanScope();
 
-            Mol* obj = ObjectWrap::Unwrap<Mol>(args.This());
-            NanReturnValue(NanNew(obj->ob->NumAtoms()));
+        Mol *obj = Unwrap(args.This());
+        NanReturnValue(NanNew(obj->ob->NumAtoms()));
     }
 
     NAN_GETTER(Mol::GetEnergy) {
-            NanScope();
+        NanScope();
 
-            Mol* obj = ObjectWrap::Unwrap<Mol>(args.This());
-            NanReturnValue(NanNew(obj->ob->GetEnergy()));
+        Mol *obj = Unwrap(args.This());
+        NanReturnValue(NanNew(obj->ob->GetEnergy()));
     }
 
 }

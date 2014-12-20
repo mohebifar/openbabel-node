@@ -22,8 +22,8 @@ namespace OBBinding {
     class Atom : public node::ObjectWrap {
     public:
         static void Init(Handle <Object> exports);
-
         static Local <Object> NewInstance(OBAtom *atom);
+        static Atom* Unwrap(Local<Object> obj);
 
         OBAtom *ob;
         Mol *parent;
@@ -34,6 +34,7 @@ namespace OBBinding {
         ~Atom();
 
         static NAN_METHOD(New);
+        static NAN_GETTER(GetAtomicNumber);
 
         static Persistent <Function> constructor;
 

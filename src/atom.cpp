@@ -14,7 +14,12 @@ namespace OBBinding {
         delete ob;
     }
 
-    Local <Object> Atom::NewInstance(OBAtom * atom) {
+    Atom* Atom::Unwrap(Local < Object > obj) {
+        Atom *atom = node::ObjectWrap::Unwrap<Atom>(obj);
+        return atom;
+    }
+
+    Local <Object> Atom::NewInstance(OBAtom *atom) {
         NanEscapableScope();
 
         const unsigned argc = 0;
@@ -22,7 +27,7 @@ namespace OBBinding {
         Local <Function> cons = NanNew<Function>(constructor);
         Local <Object> instance = cons->NewInstance(argc, argv);
 
-        Atom *obj = ObjectWrap::Unwrap<Atom>(instance);
+        Atom *obj = Unwrap(instance);
         obj->ob = atom;
 
         return NanEscapeScope(instance);
@@ -33,22 +38,31 @@ namespace OBBinding {
 
         // Prepare constructor template
         Local <FunctionTemplate> tpl = NanNew<FunctionTemplate>(New);
+
         tpl->SetClassName(NanNew("Atom"));
         tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
         // Prototype
-//    tpl->PrototypeTemplate()->SetAccessor(NanNew("molWeight"), GetMolWeight);
+        tpl->PrototypeTemplate()->SetAccessor(NanNew("atomicNumber"), GetAtomicNumber);
 
         NanAssignPersistent(constructor, tpl->GetFunction());
         exports->Set(NanNew("Atom"), tpl->GetFunction());
     }
 
     NAN_METHOD(Atom::New) {
-            NanScope();
+        NanScope();
 
-            Atom* obj = new Atom();
-            obj->Wrap(args.This());
+        Atom *obj = new Atom();
+        obj->Wrap(args.This());
 
-            NanReturnValue(args.This());
+        NanReturnValue(args.This());
     }
+
+    NAN_GETTER(Atom::GetAtomicNumber) {
+        NanScope();
+
+        Atom *obj = Unwrap(args.This());
+        NanReturnValue(NanNew(obj->ob->GetAtomicNum()));
+    }
+
 }

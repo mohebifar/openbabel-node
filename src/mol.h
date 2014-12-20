@@ -22,11 +22,12 @@ namespace OBBinding {
     class Mol : public node::ObjectWrap {
     public:
         static void Init(Handle <Object> exports);
-
         static Local <Object> NewInstance(OBMol *mol);
+        static Mol* Unwrap(Local<Object> obj);
+
+        static std::vector< Local <Object> > container;
 
         OBMol *ob;
-        std::vector<Atom*> _atoms;
 
     private:
         Mol();
@@ -35,6 +36,7 @@ namespace OBBinding {
         static NAN_METHOD(New);
         static NAN_METHOD(IsChiral);
         static NAN_METHOD(AddHydrogens);
+        static NAN_METHOD(GetAtoms);
         static NAN_GETTER(GetMolWeight);
         static NAN_GETTER(GetAtomsCount);
         static NAN_GETTER(GetEnergy);
@@ -42,5 +44,6 @@ namespace OBBinding {
         static Persistent <Function> constructor;
 
     };
+
 }
 #endif	/* MOL_H */
