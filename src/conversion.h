@@ -23,8 +23,6 @@ namespace OBBinding {
         static Conversion* Unwrap(Local<Object> obj);
 
         OBConversion *ob;
-        Local <Object> mol;
-        Handle <String> _in_format;
 
     private:
         explicit Conversion();

@@ -7,6 +7,7 @@
 
 #ifndef COMMON_H
 #define COMMON_H
+
 namespace {
 
     void logger(std::string str) {

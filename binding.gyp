@@ -3,6 +3,7 @@
     {
       "target_name": "openbabel",
       "sources": [
+        "src/forcefield.cpp",
         "src/conversion.cpp",
         "src/atom.cpp",
         "src/mol.cpp",

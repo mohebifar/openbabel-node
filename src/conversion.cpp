@@ -25,7 +25,6 @@ namespace OBBinding {
         Local <FunctionTemplate> tpl = NanNew<FunctionTemplate>(New);
         tpl->SetClassName(NanNew("Conversion"));
         tpl->InstanceTemplate()->SetInternalFieldCount(2);
-        tpl->Set("test", NanNew("Asdsdasd"));
 
         // Prototype
         NODE_SET_PROTOTYPE_METHOD(tpl, "read", Read);
@@ -75,7 +74,6 @@ namespace OBBinding {
         std::string str = std::string(*v8::String::AsciiValue(args[0]->ToString()));
 
         const char *format = str.c_str();
-        obj->_in_format = args[0]->ToString();
 
 
         if (obj->ob->SetInFormat(format)) {
@@ -94,8 +92,6 @@ namespace OBBinding {
         std::string str = std::string(*v8::String::AsciiValue(args[0]->ToString()));
 
         const char *format = str.c_str();
-        obj->_in_format = args[0]->ToString();
-
 
         if (obj->ob->SetOutFormat(format)) {
             NanReturnValue(args.This());
