@@ -23,5 +23,9 @@
     "bindings": "^1.2.1",
     "nan": "^1.4.1"
   },
-  "gypfile": true
+  "gypfile": true,
+  "devDependencies": {
+    "gulp": "^3.8.10",
+    "gulp-yuidoc": "^0.1.2"
+  }
 }
