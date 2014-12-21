@@ -8,6 +8,9 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <v8.h>
+#include <typeinfo>
+
 namespace {
 
     void logger(std::string str) {
@@ -22,7 +25,6 @@ namespace {
     }
 
     char* itoa(int val, int base) {
-
         static char buf[32] = {0};
 
         int i = 30;
@@ -32,13 +34,19 @@ namespace {
             buf[i] = "0123456789abcdef"[val % base];
 
         return &buf[i + 1];
-
     }
     
     void logger(int a) {
-        
         logger(std::string(itoa(a, 10)));
+    }
 
+    std::string ToString(v8::Handle<v8::String> str) {
+        return std::string(*v8::String::AsciiValue(str));
+    }
+
+    const char* ToConstChar(v8::Handle<v8::String> str) {
+        std::string a = std::string(*v8::String::AsciiValue(str));
+        return a.c_str();
     }
 }
 

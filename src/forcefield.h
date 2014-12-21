@@ -33,6 +33,23 @@ namespace OBBinding {
         static NAN_METHOD(FindForceField);
         static NAN_METHOD(Setup);
         static NAN_METHOD(SystematicRotorSearch);
+        static NAN_METHOD(RandomRotorSearch);
+        static NAN_METHOD(WeightedRotorSearch);
+        static NAN_METHOD(SystematicRotorSearchInitialize);
+        static NAN_METHOD(SystematicRotorSearchNextConformer);
+        static NAN_METHOD(RandomRotorSearchInitialize);
+        static NAN_METHOD(RandomRotorSearchNextConformer);
+        static NAN_METHOD(SetLineSearchType);
+        static NAN_METHOD(GetLineSearchType);
+        static NAN_METHOD(GetAtomTypes);
+        static NAN_METHOD(GetPartialCharges);
+        static NAN_METHOD(GetCoordinates);
+        static NAN_METHOD(GetConformers);
+        static NAN_METHOD(SetCoordinates);
+        static NAN_METHOD(SetConformers);
+        static NAN_METHOD(EnableCutOff);
+        static NAN_METHOD(IsCutOffEnabled);
+        static NAN_METHOD(DistanceGeometry);
 
         static NAN_GETTER(GetEnergy);
 

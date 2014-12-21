@@ -70,18 +70,13 @@ namespace OBBinding {
         NanScope();
 
         Conversion* obj = Unwrap(args.Holder());
-
-        std::string str = std::string(*v8::String::AsciiValue(args[0]->ToString()));
-
-        const char *format = str.c_str();
-
+        const char *format = ToConstChar(args[0]->ToString());
 
         if (obj->ob->SetInFormat(format)) {
             NanReturnValue(args.This());
         } else {
             NanReturnValue(NanThrowError("The Input format is invalid."));
         }
-
     }
 
     NAN_METHOD(Conversion::SetOutFormat) {
@@ -98,7 +93,6 @@ namespace OBBinding {
         } else {
             NanReturnValue(NanThrowError("The Input format is invalid."));
         }
-
     }
 
     NAN_METHOD(Conversion::Write) {

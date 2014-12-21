@@ -1,4 +1,5 @@
-#include "atom.h"
+#include <v8.h>
+#include "mol.h"
 
 using namespace v8;
 using namespace OpenBabel;
@@ -42,8 +43,26 @@ namespace OBBinding {
         tpl->SetClassName(NanNew("Atom"));
         tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
-        // Prototype
+        // Methods
+        tpl->PrototypeTemplate()->Set(NanNew("isConnected"), NanNew < FunctionTemplate > (IsConnected)->GetFunction());
+        tpl->PrototypeTemplate()->Set(NanNew("isCarboxylOxygen"), NanNew < FunctionTemplate > (IsCarboxylOxygen)->GetFunction());
+        tpl->PrototypeTemplate()->Set(NanNew("isPhosphateOxygen"), NanNew < FunctionTemplate > (IsPhosphateOxygen)->GetFunction());
+        tpl->PrototypeTemplate()->Set(NanNew("isSulfateOxygen"), NanNew < FunctionTemplate > (IsSulfateOxygen)->GetFunction());
+        tpl->PrototypeTemplate()->Set(NanNew("isNitroOxygen"), NanNew < FunctionTemplate > (IsNitroOxygen)->GetFunction());
+        tpl->PrototypeTemplate()->Set(NanNew("isAmideNitrogen"), NanNew < FunctionTemplate > (IsAmideNitrogen)->GetFunction());
+        tpl->PrototypeTemplate()->Set(NanNew("isPolarHydrogen"), NanNew < FunctionTemplate > (IsPolarHydrogen)->GetFunction());
+        tpl->PrototypeTemplate()->Set(NanNew("isNonPolarHydrogen"), NanNew < FunctionTemplate > (IsNonPolarHydrogen)->GetFunction());
+        tpl->PrototypeTemplate()->Set(NanNew("isAromaticNOxide"), NanNew < FunctionTemplate > (IsAromaticNOxide)->GetFunction());
+        tpl->PrototypeTemplate()->Set(NanNew("isAxial"), NanNew < FunctionTemplate > (IsAxial)->GetFunction());
+        tpl->PrototypeTemplate()->Set(NanNew("isInRing"), NanNew < FunctionTemplate > (IsInRing)->GetFunction());
+        tpl->PrototypeTemplate()->Set(NanNew("hasBondOfOrder"), NanNew < FunctionTemplate > (HasBondOfOrder)->GetFunction());
+        tpl->PrototypeTemplate()->Set(NanNew("countBondsOfOrder"), NanNew < FunctionTemplate > (CountBondsOfOrder)->GetFunction());
+        tpl->PrototypeTemplate()->Set(NanNew("forEachBond"), NanNew < FunctionTemplate > (ForEachBond)->GetFunction());
+        tpl->PrototypeTemplate()->Set(NanNew("forEachNeighbour"), NanNew < FunctionTemplate > (ForEachNeighbour)->GetFunction());
+
+        // Properties
         tpl->PrototypeTemplate()->SetAccessor(NanNew("atomicNumber"), GetAtomicNumber);
+        tpl->PrototypeTemplate()->SetAccessor(NanNew("index"), GetIndex);
 
         NanAssignPersistent(constructor, tpl->GetFunction());
         exports->Set(NanNew("Atom"), tpl->GetFunction());
@@ -58,11 +77,198 @@ namespace OBBinding {
         NanReturnValue(args.This());
     }
 
+    NAN_METHOD(Atom::GetDistance) {
+        NanScope();
+
+        Atom *obj = Unwrap(args.This());
+
+        if(args[0]->IsObject()) {
+            Atom *atomObj = Atom::Unwrap(args[0]->ToObject());
+
+            NanReturnValue(NanNew(obj->ob->GetDistance(atomObj->ob)));
+        } else {
+            NanReturnValue(NanThrowError("1 Arguments of type Atom is required."));
+        }
+    }
+
+    NAN_METHOD(Atom::HasBondOfOrder) {
+        NanScope();
+
+        Atom *obj = Unwrap(args.This());
+
+        if(args[0]->IsNumber()) {
+            unsigned int order = args[0]->NumberValue();
+
+            NanReturnValue(NanNew(obj->ob->HasBondOfOrder(order)));
+        } else {
+            NanReturnValue(NanThrowError("1 Arguments is required."));
+        }
+    }
+
+    NAN_METHOD(Atom::CountBondsOfOrder) {
+        NanScope();
+
+        Atom *obj = Unwrap(args.This());
+
+        if(args[0]->IsNumber()) {
+            unsigned int order = args[0]->NumberValue();
+
+            NanReturnValue(NanNew(obj->ob->CountBondsOfOrder(order)));
+        } else {
+            NanReturnValue(NanThrowError("1 Arguments is required."));
+        }
+    }
+
+    NAN_METHOD(Atom::IsInRing) {
+        NanScope();
+
+        Atom *obj = Unwrap(args.This());
+
+        NanReturnValue(NanNew(obj->ob->IsInRing()));
+    }
+
+    NAN_METHOD(Atom::IsCarboxylOxygen) {
+        NanScope();
+
+        Atom *obj = Unwrap(args.This());
+
+        NanReturnValue(NanNew(obj->ob->IsCarboxylOxygen()));
+    }
+
+    NAN_METHOD(Atom::IsPhosphateOxygen) {
+        NanScope();
+
+        Atom *obj = Unwrap(args.This());
+
+        NanReturnValue(NanNew(obj->ob->IsPhosphateOxygen()));
+    }
+
+    NAN_METHOD(Atom::IsSulfateOxygen) {
+        NanScope();
+
+        Atom *obj = Unwrap(args.This());
+
+        NanReturnValue(NanNew(obj->ob->IsSulfateOxygen()));
+    }
+
+    NAN_METHOD(Atom::IsNitroOxygen) {
+        NanScope();
+
+        Atom *obj = Unwrap(args.This());
+
+        NanReturnValue(NanNew(obj->ob->IsNitroOxygen()));
+    }
+
+    NAN_METHOD(Atom::IsAmideNitrogen) {
+        NanScope();
+
+        Atom *obj = Unwrap(args.This());
+
+        NanReturnValue(NanNew(obj->ob->IsAmideNitrogen()));
+    }
+
+    NAN_METHOD(Atom::IsPolarHydrogen) {
+        NanScope();
+
+        Atom *obj = Unwrap(args.This());
+
+        NanReturnValue(NanNew(obj->ob->IsPolarHydrogen()));
+    }
+
+    NAN_METHOD(Atom::IsNonPolarHydrogen) {
+        NanScope();
+
+        Atom *obj = Unwrap(args.This());
+
+        NanReturnValue(NanNew(obj->ob->IsNonPolarHydrogen()));
+    }
+
+    NAN_METHOD(Atom::IsAromaticNOxide) {
+        NanScope();
+
+        Atom *obj = Unwrap(args.This());
+
+        NanReturnValue(NanNew(obj->ob->IsAromaticNOxide()));
+    }
+
+    NAN_METHOD(Atom::IsAxial) {
+        NanScope();
+
+        Atom *obj = Unwrap(args.This());
+
+        NanReturnValue(NanNew(obj->ob->IsAxial()));
+    }
+
+    NAN_METHOD(Atom::IsConnected) {
+        NanScope();
+
+        Atom *obj = Unwrap(args.This());
+
+        if(args[0]->IsObject()) {
+            Atom *atomObj = Atom::Unwrap(args[0]->ToObject());
+
+            NanReturnValue(NanNew(obj->ob->IsConnected(atomObj->ob)));
+        } else {
+            NanReturnValue(NanThrowError("1 Arguments of type Atom is required."));
+        }
+    }
+
+    NAN_METHOD(Atom::MatchesSMARTS) {
+        NanScope();
+
+        Atom *obj = Unwrap(args.This());
+
+        if(args[0]->IsString()) {
+            const char *str = ToConstChar(args[0]->ToString());
+            NanReturnValue(NanNew(obj->ob->MatchesSMARTS(str)));
+        } else {
+            NanReturnValue(NanThrowError("1 Arguments of type string is required."));
+        }
+    }
+
     NAN_GETTER(Atom::GetAtomicNumber) {
         NanScope();
 
         Atom *obj = Unwrap(args.This());
         NanReturnValue(NanNew(obj->ob->GetAtomicNum()));
+    }
+
+    NAN_GETTER(Atom::GetIndex) {
+        NanScope();
+
+        Atom *obj = Unwrap(args.This());
+        NanReturnValue(NanNew(obj->ob->GetIdx()));
+    }
+
+    NAN_METHOD(Atom::ForEachBond) {
+        NanScope();
+
+        Atom *obj = Unwrap(args.This());
+        Local<Function> cb = args[0].As<Function>();
+
+        FOR_BONDS_OF_ATOM (bond, obj->ob) {
+            const unsigned argc = 1;
+
+            Local<Value> argv[argc] = { Bond::NewInstance(&*bond) };
+            NanMakeCallback(NanGetCurrentContext()->Global(), cb, argc, argv);
+        }
+
+        NanReturnUndefined();
+    }
+
+    NAN_METHOD(Atom::ForEachNeighbour) {
+        NanScope();
+
+        Atom *obj = Unwrap(args.This());
+        Local<Function> cb = args[0].As<Function>();
+
+        FOR_NBORS_OF_ATOM (atom, obj->ob) {
+            const unsigned argc = 1;
+            Local<Value> argv[argc] = { Atom::NewInstance(&*atom) };
+            NanMakeCallback(NanGetCurrentContext()->Global(), cb, argc, argv);
+        }
+
+        NanReturnUndefined();
     }
 
 }

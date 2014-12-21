@@ -3,14 +3,16 @@
     {
       "target_name": "openbabel",
       "sources": [
-        "src/forcefield.cpp",
-        "src/conversion.cpp",
+        "src/bond.cpp",
         "src/atom.cpp",
         "src/mol.cpp",
-        "src/addon.cpp"
+        "src/addon.cpp",
+        "src/forcefield.cpp",
+        "src/builder.cpp",
+        "src/conversion.cpp"
       ],
-      "libraries": [
-        "-lopenbabel"
+      "defines": [
+        "GCC_ENABLE_CPP_RTTI = YES"
       ],
       "include_dirs": ["<!(node -e \"require('nan')\")", "/usr/local/lib/openbabel/2.3.2", "/usr/local/include/openbabel-2.0"],
       "conditions": [
@@ -29,7 +31,8 @@
           ],
           "cflags": [
             "-pipe"
-          ]
+          ],
+          "cflags_cc!": [ "-fno-rtti" ]
         }]
       ]
     }

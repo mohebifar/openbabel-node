@@ -2,14 +2,14 @@
  * File:   conversion.h
  * Author: Mohamad Mohebifar
  *
- * Created on December 20, 2014, 11:01 AM
+ * Created on December 20, 2014, 13:13 PM
  */
 
-#ifndef FORCEFIELD_H
-#define    FORCEFIELD_H
+#ifndef BUILDER_H
+#define    BUILDER_H
 
 #include <nan.h>
-#include <openbabel/forcefield.h>
+#include <openbabel/builder.h>
 #include "common.h"
 #include "mol.h"
 
@@ -17,28 +17,24 @@ using namespace v8;
 using namespace OpenBabel;
 
 namespace OBBinding {
-    class ForceField : public node::ObjectWrap {
+    class Builder : public node::ObjectWrap {
     public:
         static void Init(Handle <Object> exports);
-        static Local <Object> NewInstance(OBForceField *forcefield);
-        static ForceField* Unwrap(Local<Object> obj);
+        static Local <Object> NewInstance(OBBuilder *builder);
+        static Builder* Unwrap(Local<Object> obj);
 
-        OBForceField *ob;
+        OBBuilder *ob;
 
     private:
-        explicit ForceField();
-        ~ForceField();
+        explicit Builder();
+        ~Builder();
 
         static NAN_METHOD(New);
-        static NAN_METHOD(FindForceField);
-        static NAN_METHOD(Setup);
-        static NAN_METHOD(SystematicRotorSearch);
-
-        static NAN_GETTER(GetEnergy);
+        static NAN_METHOD(Build);
 
         static Persistent <Function> constructor;
 
     };
 }
 
-#endif	/* FORCEFIELD_H */
+#endif	/* BUILDER_H */
