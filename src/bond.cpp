@@ -45,7 +45,7 @@ namespace OBBinding {
 
         // Methods
         tpl->PrototypeTemplate()->Set(NanNew("getBegin"), NanNew < FunctionTemplate > (GetBeginAtom)->GetFunction());
-        tpl->PrototypeTemplate()->Set(NanNew("getEndAtom"), NanNew < FunctionTemplate > (GetEndAtom)->GetFunction());
+        tpl->PrototypeTemplate()->Set(NanNew("getEnd"), NanNew < FunctionTemplate > (GetEndAtom)->GetFunction());
         tpl->PrototypeTemplate()->Set(NanNew("setBegin"), NanNew < FunctionTemplate > (SetBegin)->GetFunction());
         tpl->PrototypeTemplate()->Set(NanNew("setEnd"), NanNew < FunctionTemplate > (SetEnd)->GetFunction());
         tpl->PrototypeTemplate()->Set(NanNew("setLength"), NanNew < FunctionTemplate > (SetLength)->GetFunction());
@@ -66,7 +66,6 @@ namespace OBBinding {
         tpl->PrototypeTemplate()->Set(NanNew("isDouble"), NanNew < FunctionTemplate > (IsDouble)->GetFunction());
         tpl->PrototypeTemplate()->Set(NanNew("isTriple"), NanNew < FunctionTemplate > (IsTriple)->GetFunction());
         tpl->PrototypeTemplate()->Set(NanNew("isKSingle"), NanNew < FunctionTemplate > (IsKDouble)->GetFunction());
-        tpl->PrototypeTemplate()->Set(NanNew("isKTriple"), NanNew < FunctionTemplate > (IsKTriple)->GetFunction());
         tpl->PrototypeTemplate()->Set(NanNew("isKTriple"), NanNew < FunctionTemplate > (IsKTriple)->GetFunction());
         tpl->PrototypeTemplate()->Set(NanNew("isClosure"), NanNew < FunctionTemplate > (IsClosure)->GetFunction());
         tpl->PrototypeTemplate()->Set(NanNew("isUp"), NanNew < FunctionTemplate > (IsUp)->GetFunction());

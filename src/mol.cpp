@@ -47,7 +47,7 @@ namespace OBBinding {
         tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
         // Prototype
-        tpl->PrototypeTemplate()->SetAccessor(NanNew("molWeight"), GetMolWeight);
+        tpl->PrototypeTemplate()->SetAccessor(NanNew("molarMass"), GetMolWeight);
         tpl->PrototypeTemplate()->SetAccessor(NanNew("exactMass"), GetExactMass);
         tpl->PrototypeTemplate()->SetAccessor(NanNew("atomsCount"), GetAtomsCount);
         tpl->PrototypeTemplate()->SetAccessor(NanNew("bondsCount"), GetBondsCount);

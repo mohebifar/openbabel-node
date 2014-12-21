@@ -59,6 +59,8 @@ namespace OBBinding {
         tpl->PrototypeTemplate()->Set(NanNew("countBondsOfOrder"), NanNew < FunctionTemplate > (CountBondsOfOrder)->GetFunction());
         tpl->PrototypeTemplate()->Set(NanNew("forEachBond"), NanNew < FunctionTemplate > (ForEachBond)->GetFunction());
         tpl->PrototypeTemplate()->Set(NanNew("forEachNeighbour"), NanNew < FunctionTemplate > (ForEachNeighbour)->GetFunction());
+        tpl->PrototypeTemplate()->Set(NanNew("getDistance"), NanNew < FunctionTemplate > (GetDistance)->GetFunction());
+        tpl->PrototypeTemplate()->Set(NanNew("matchesSMARTS"), NanNew < FunctionTemplate > (MatchesSMARTS)->GetFunction());
 
         // Properties
         tpl->PrototypeTemplate()->SetAccessor(NanNew("atomicNumber"), GetAtomicNumber);
