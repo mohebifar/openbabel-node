@@ -37,7 +37,7 @@ Not configured yet, will be considered soon.
 
 <h1 id="usage">Usage</h1>
 
-Check the **[Documentation API](https://mohebifar.github.io/openbabel-node/api/)** for more details.
+Check the **[Documentation API](http://mohebifar.github.io/openbabel-node/api/)** for more details.
 
 Use the `openbabel` module in your project.
 
@@ -87,7 +87,7 @@ Create an instance of `ob.Conversion` using The `ob.Conversion.findForceField` f
     
 <h3 id="usage-forcefield-conformers-search">Conformers search</h3>
 
-Call one of `systematicRotorSearch`, `randomRotorSearch`, `weightedRotorSearch`. (Read more in [API](https://mohebifar.github.io/openbabel-node/api/))
+Call one of `systematicRotorSearch`, `randomRotorSearch`, `weightedRotorSearch`. (Read more in [API](http://mohebifar.github.io/openbabel-node/api/))
 
     console.log(ff.energy); // Before getting conformer
     ff.systematicRotorSearch();
