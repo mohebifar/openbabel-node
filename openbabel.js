@@ -10,7 +10,8 @@ var mol = conversion
 var b = new openbabel.Builder();
 b.build(mol);
 
-console.log(mol.atoms[1] == mol.atoms[1]);
+console.log(mol.atoms[0].index);
+
 //
 conversion.setOutFormat('mol');
 //
