@@ -8,6 +8,7 @@ using namespace OpenBabel;
 namespace OBBinding {
     Persistent<Function> Mol::constructor;
     Persistent<ObjectTemplate> Mol::atomsTemplate;
+    Persistent<ObjectTemplate> Mol::bondsTemplate;
 
     Mol::Mol() {
         ob = new OBMol();
@@ -52,6 +53,11 @@ namespace OBBinding {
         atoms->SetInternalFieldCount(1);
         atoms->SetIndexedPropertyHandler(GetAtomByIndex);
         NanAssignPersistent(atomsTemplate, atoms);
+
+        Local<ObjectTemplate> bonds = NanNew < ObjectTemplate > ();
+        bonds->SetInternalFieldCount(1);
+        bonds->SetIndexedPropertyHandler(GetBondByIndex);
+        NanAssignPersistent(bondsTemplate, bonds);
 
         // Prototype
         tpl->PrototypeTemplate()->SetAccessor(NanNew("molarMass"), GetMolWeight);
@@ -112,7 +118,11 @@ namespace OBBinding {
         Local<Object> atoms = atomsTemplate->NewInstance();
         NanSetInternalFieldPointer(atoms, 0, const_cast<Mol *>(obj));
 
+        Local<Object> bonds = bondsTemplate->NewInstance();
+        NanSetInternalFieldPointer(bonds, 0, const_cast<Mol *>(obj));
+
         self->Set(NanNew("atoms"), atoms);
+        self->Set(NanNew("bonds"), bonds);
 
         NanReturnValue(args.This());
     }
@@ -307,11 +317,28 @@ namespace OBBinding {
         Mol *obj = static_cast<Mol *>(ptr);
 
         int idx = index;
-        OBAtom *atom = obj->ob->GetAtom(idx);
+        OBAtom *atom = obj->ob->GetAtomById(idx);
         if (atom != NULL) {
             NanReturnValue(Atom::NewInstance(atom));
         } else {
             NanReturnValue(NanThrowError("Atom with given index not found."));
+        }
+
+    }
+
+    NAN_INDEX_GETTER(Mol::GetBondByIndex) {
+        NanScope();
+
+        Handle<Object> self = args.This();
+        void *ptr = NanGetInternalFieldPointer(self, 0);
+        Mol *obj = static_cast<Mol *>(ptr);
+
+        int idx = index;
+        OBBond *bond = obj->ob->GetBond(idx);
+        if (bond != NULL) {
+            NanReturnValue(Bond::NewInstance(bond));
+        } else {
+            NanReturnValue(NanThrowError("Bond with given index not found."));
         }
 
     }

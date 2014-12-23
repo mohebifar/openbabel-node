@@ -74,6 +74,7 @@ namespace OBBinding {
 
         static NAN_GETTER(GetAtoms);
         static NAN_INDEX_GETTER(GetAtomByIndex);
+        static NAN_INDEX_GETTER(GetBondByIndex);
         static NAN_GETTER(GetExactMass);
         static NAN_GETTER(GetAtomsCount);
         static NAN_GETTER(GetBondsCount);
@@ -83,6 +84,7 @@ namespace OBBinding {
         static NAN_GETTER(NumConformers);
 
         static Persistent<ObjectTemplate> atomsTemplate;
+        static Persistent<ObjectTemplate> bondsTemplate;
         static Persistent <Function> constructor;
 
     };
