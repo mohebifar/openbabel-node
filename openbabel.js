@@ -1,22 +1,18 @@
 var start = Date.now();
-var openbabel = require('./build/Release/openbabel');
+var openbabel = require('./index');
 var fs = require('fs');
 
-console.log("Require", Date.now() - start);
 var conversion = new openbabel.Conversion();
+var mol = conversion
+    .setInFormat('smiles')
+    .read('CN');
 
-console.log("Create Conversion", Date.now() - start);
-var mol = conversion.setInFormat('smiles').read("CC");
+var b = new openbabel.Builder();
+b.build(mol);
 
-console.log("Result is", mol.molWeight);
-
-var atoms1 = mol.getAtoms();
-
-var ff = openbabel.ForceField.findForceField("mmff94");
-console.log("Energy", ff.energy);
-ff.setup(mol);
-console.log("Energy", ff.energy);
-ff.systematicRotorSearch(1);
-console.log("Energy", ff.energy);
-fs.writeFileSync('a.mol', conversion.setOutFormat('mol').write(mol));
-console.log("Read", Date.now() - start);
+console.log(mol.atoms[1] == mol.atoms[1]);
+//
+conversion.setOutFormat('mol');
+//
+var str = conversion.write(mol);
+console.log(str);
