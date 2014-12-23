@@ -18,14 +18,13 @@
     "forcefield"
   ],
   "author": "Mohamad Mohebifar <netfars@gmail.com> (http://mohebifar.ir/)",
-  "license": "MIT",
+  "license": "GPL",
   "dependencies": {
     "bindings": "^1.2.1",
     "nan": "^1.4.1"
   },
   "gypfile": true,
   "devDependencies": {
-    "gitdown": "^1.2.6",
     "gulp": "^3.8.10",
     "gulp-jshint": "^1.9.0",
     "gulp-mocha": "^2.0.0",
