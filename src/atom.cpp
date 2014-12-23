@@ -6,6 +6,7 @@ using namespace OpenBabel;
 
 namespace OBBinding {
     Persistent <Function> Atom::constructor;
+    Stack Atom::container;
 
     Atom::Atom() {
 
@@ -22,7 +23,12 @@ namespace OBBinding {
 
     Local <Object> Atom::NewInstance(OBAtom *atom) {
         NanEscapableScope();
-
+        for(unsigned int i = 0; i < container.size(); i++) {
+            Local<Object> ins = Local<Object>::New(container.at(0));
+            if(Unwrap(ins)->ob == atom) {
+                return ins;
+            }
+        }
         const unsigned argc = 0;
         Local <Value> argv[argc] = {};
         Local <Function> cons = NanNew<Function>(constructor);
@@ -63,7 +69,10 @@ namespace OBBinding {
         tpl->PrototypeTemplate()->Set(NanNew("matchesSMARTS"), NanNew < FunctionTemplate > (MatchesSMARTS)->GetFunction());
 
         // Properties
-        tpl->PrototypeTemplate()->SetAccessor(NanNew("atomicNumber"), GetAtomicNumber);
+        tpl->PrototypeTemplate()->SetAccessor(NanNew("atomicNumber"), GetAtomicNumber, SetAtomicNumber);
+        tpl->PrototypeTemplate()->SetAccessor(NanNew("_x"), GetX, SetX);
+        tpl->PrototypeTemplate()->SetAccessor(NanNew("_y"), GetY, SetY);
+        tpl->PrototypeTemplate()->SetAccessor(NanNew("_z"), GetZ, SetZ);
         tpl->PrototypeTemplate()->SetAccessor(NanNew("index"), GetIndex);
 
         NanAssignPersistent(constructor, tpl->GetFunction());
@@ -75,6 +84,7 @@ namespace OBBinding {
 
         Atom *obj = new Atom();
         obj->Wrap(args.This());
+        container.push_back(Persistent<Object>::New(args.This()));
 
         NanReturnValue(args.This());
     }
@@ -235,6 +245,16 @@ namespace OBBinding {
         NanReturnValue(NanNew(obj->ob->GetAtomicNum()));
     }
 
+    NAN_SETTER(Atom::SetAtomicNumber) {
+        NanScope();
+
+        if(value->IsNumber()) {
+            Atom *obj = Unwrap(args.This());
+            int atomicNum = value->NumberValue();
+            obj->ob->SetAtomicNum(atomicNum);
+        }
+    }
+
     NAN_GETTER(Atom::GetIndex) {
         NanScope();
 
@@ -273,4 +293,57 @@ namespace OBBinding {
         NanReturnUndefined();
     }
 
+    NAN_GETTER(Atom::GetX) {
+        NanScope();
+
+        Atom *obj = Unwrap(args.This());
+
+        NanReturnValue(NanNew(obj->ob->GetX()));
+    }
+
+    NAN_SETTER(Atom::SetX) {
+        NanScope();
+
+        if(value->IsNumber()) {
+            Atom *obj = Unwrap(args.This());
+            const double v = value->NumberValue();
+            obj->ob->SetVector(v, obj->ob->y(), obj->ob->z());
+        }
+    }
+
+    NAN_GETTER(Atom::GetY) {
+        NanScope();
+
+        Atom *obj = Unwrap(args.This());
+
+        NanReturnValue(NanNew(obj->ob->GetY()));
+    }
+
+    NAN_SETTER(Atom::SetY) {
+        NanScope();
+
+        if(value->IsNumber()) {
+            Atom *obj = Unwrap(args.This());
+            const double v = value->NumberValue();
+            obj->ob->SetVector(obj->ob->x(), v, obj->ob->z());
+        }
+    }
+
+    NAN_GETTER(Atom::GetZ) {
+        NanScope();
+
+        Atom *obj = Unwrap(args.This());
+
+        NanReturnValue(NanNew(obj->ob->GetZ()));
+    }
+
+    NAN_SETTER(Atom::SetZ) {
+        NanScope();
+
+        if(value->IsNumber()) {
+            Atom *obj = Unwrap(args.This());
+            const double v = value->NumberValue();
+            obj->ob->SetVector(obj->ob->x(), obj->ob->y(), v);
+        }
+    }
 }

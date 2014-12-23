@@ -1,11 +1,13 @@
 #include <v8.h>
+#include <nan.h>
 #include "mol.h"
 
 using namespace v8;
 using namespace OpenBabel;
 
 namespace OBBinding {
-    Persistent <Function> Mol::constructor;
+    Persistent<Function> Mol::constructor;
+    Persistent<ObjectTemplate> Mol::atomsTemplate;
 
     Mol::Mol() {
         ob = new OBMol();
@@ -15,19 +17,19 @@ namespace OBBinding {
         delete ob;
     }
 
-    Mol* Mol::Unwrap(Local < Object > obj) {
+    Mol *Mol::Unwrap(Local<Object> obj) {
         Mol *mol = node::ObjectWrap::Unwrap<Mol>(obj);
         return mol;
     }
 
-    Local <Object> Mol::NewInstance(OBMol *mol) {
+    Local<Object> Mol::NewInstance(OBMol *mol) {
         NanEscapableScope();
 
-        Local <Function> cons = NanNew < Function > (constructor);
-        Local <Object> instance;
+        Local<Function> cons = NanNew < Function > (constructor);
+        Local<Object> instance;
 
         const unsigned argc = 0;
-        Local <Value> argv[argc] = {};
+        Local<Value> argv[argc] = {};
         instance = cons->NewInstance(argc, argv);
 
         Mol *obj = Unwrap(instance);
@@ -38,13 +40,18 @@ namespace OBBinding {
         return NanEscapeScope(instance);
     }
 
-    void Mol::Init(Handle < Object > exports) {
+    void Mol::Init(Handle<Object> exports) {
         NanScope();
 
         // Prepare constructor template
-        Local <FunctionTemplate> tpl = NanNew < FunctionTemplate > (New);
+        Local<FunctionTemplate> tpl = NanNew < FunctionTemplate > (New);
         tpl->SetClassName(NanNew("Mol"));
         tpl->InstanceTemplate()->SetInternalFieldCount(1);
+
+        Local<ObjectTemplate> atoms = NanNew < ObjectTemplate > ();
+        atoms->SetInternalFieldCount(1);
+        atoms->SetIndexedPropertyHandler(GetAtomByIndex);
+        NanAssignPersistent(atomsTemplate, atoms);
 
         // Prototype
         tpl->PrototypeTemplate()->SetAccessor(NanNew("molarMass"), GetMolWeight);
@@ -60,7 +67,6 @@ namespace OBBinding {
         tpl->PrototypeTemplate()->Set(NanNew("isEmpty"), NanNew < FunctionTemplate > (Empty)->GetFunction());
         tpl->PrototypeTemplate()->Set(NanNew("addHydrogens"), NanNew < FunctionTemplate > (AddHydrogens)->GetFunction());
         tpl->PrototypeTemplate()->Set(NanNew("deleteHydrogens"), NanNew < FunctionTemplate > (AddHydrogens)->GetFunction());
-        tpl->PrototypeTemplate()->Set(NanNew("getAtoms"), NanNew < FunctionTemplate > (GetAtoms)->GetFunction());
         tpl->PrototypeTemplate()->Set(NanNew("forEachAtom"), NanNew < FunctionTemplate > (ForEachAtom)->GetFunction());
         tpl->PrototypeTemplate()->Set(NanNew("forEachBond"), NanNew < FunctionTemplate > (ForEachBond)->GetFunction());
         tpl->PrototypeTemplate()->Set(NanNew("createAtom"), NanNew < FunctionTemplate > (CreateAtom)->GetFunction());
@@ -98,8 +104,15 @@ namespace OBBinding {
     NAN_METHOD(Mol::New) {
         NanScope();
 
+        Handle<Object> self = args.This();
+
         Mol *obj = new Mol();
-        obj->Wrap(args.This());
+        obj->Wrap(self);
+
+        Local<Object> atoms = atomsTemplate->NewInstance();
+        NanSetInternalFieldPointer(atoms, 0, const_cast<Mol *>(obj));
+
+        self->Set(NanNew("atoms"), atoms);
 
         NanReturnValue(args.This());
     }
@@ -177,6 +190,7 @@ namespace OBBinding {
     NAN_METHOD(Mol::HasHybridizationPerceived) {
         NanScope();
 
+
         Mol *obj = Unwrap(args.This());
         NanReturnValue(NanNew(obj->ob->HasHybridizationPerceived()));
     }
@@ -228,7 +242,7 @@ namespace OBBinding {
 
         bool polaronly = false;
 
-        if(args[0]->IsBoolean() && args[0]->BooleanValue()) {
+        if (args[0]->IsBoolean() && args[0]->BooleanValue()) {
             polaronly = true;
         }
 
@@ -241,7 +255,7 @@ namespace OBBinding {
 
         Mol *obj = Unwrap(args.This());
 
-        if(args[0]->IsBoolean() && args[0]->BooleanValue()) {
+        if (args[0]->IsBoolean() && args[0]->BooleanValue()) {
             NanReturnValue(NanNew(obj->ob->DeleteNonPolarHydrogens()));
         } else {
             NanReturnValue(NanNew(obj->ob->DeleteHydrogens()));
@@ -256,7 +270,7 @@ namespace OBBinding {
         NanReturnValue(NanNew(obj->ob->IsChiral()));
     }
 
-    NAN_METHOD(Mol::GetAtoms) {
+    NAN_GETTER(Mol::GetAtoms) {
         NanScope();
 
         Mol *obj = Unwrap(args.This());
@@ -278,11 +292,28 @@ namespace OBBinding {
 
         FOR_ATOMS_OF_MOL (atom, obj->ob) {
             const unsigned argc = 1;
-            Local<Value> argv[argc] = { Atom::NewInstance(&*atom) };
+            Local<Value> argv[argc] = {Atom::NewInstance(&*atom)};
             NanMakeCallback(NanGetCurrentContext()->Global(), cb, argc, argv);
         }
 
         NanReturnUndefined();
+    }
+
+    NAN_INDEX_GETTER(Mol::GetAtomByIndex) {
+        NanScope();
+
+        Handle<Object> self = args.This();
+        void *ptr = NanGetInternalFieldPointer(self, 0);
+        Mol *obj = static_cast<Mol *>(ptr);
+
+        int idx = index;
+        OBAtom *atom = obj->ob->GetAtom(idx);
+        if (atom != NULL) {
+            NanReturnValue(Atom::NewInstance(atom));
+        } else {
+            NanReturnValue(NanThrowError("Atom with given index not found."));
+        }
+
     }
 
     NAN_METHOD(Mol::ForEachBond) {
@@ -293,7 +324,7 @@ namespace OBBinding {
 
         FOR_BONDS_OF_MOL (bond, obj->ob) {
             const unsigned argc = 1;
-            Local<Value> argv[argc] = { Bond::NewInstance(&*bond) };
+            Local<Value> argv[argc] = {Bond::NewInstance(&*bond)};
             NanMakeCallback(NanGetCurrentContext()->Global(), cb, argc, argv);
         }
 
@@ -315,7 +346,7 @@ namespace OBBinding {
 
         Mol *obj = Unwrap(args.This());
 
-        if(args[0]->IsObject()) {
+        if (args[0]->IsObject()) {
 
             Atom *atomObj = Atom::Unwrap(args[0]->ToObject());
             NanReturnValue(NanNew(obj->ob->AddAtom(*atomObj->ob)));
@@ -330,7 +361,7 @@ namespace OBBinding {
 
         Mol *obj = Unwrap(args.This());
 
-        if(args[0]->IsObject()) {
+        if (args[0]->IsObject()) {
 
             Atom *atomObj = Atom::Unwrap(args[0]->ToObject());
             NanReturnValue(NanNew(obj->ob->DeleteAtom(atomObj->ob)));
@@ -356,7 +387,7 @@ namespace OBBinding {
         Mol *obj = Unwrap(args.This());
 
 
-        if(args[0]->IsObject()) {
+        if (args[0]->IsObject()) {
 
             Bond *bondObj = Bond::Unwrap(args[0]->ToObject());
             NanReturnValue(NanNew(obj->ob->AddBond(*bondObj->ob)));
@@ -371,7 +402,7 @@ namespace OBBinding {
 
         Mol *obj = Unwrap(args.This());
 
-        if(args[0]->IsObject()) {
+        if (args[0]->IsObject()) {
 
             Bond *bondObj = Bond::Unwrap(args[0]->ToObject());
             NanReturnValue(NanNew(obj->ob->DeleteBond(bondObj->ob)));
@@ -386,7 +417,7 @@ namespace OBBinding {
 
         Mol *obj = Unwrap(args.This());
 
-        if(args[0]->IsObject() && args[1]->IsObject() && args[2]->IsObject() && args[3]->IsObject()) {
+        if (args[0]->IsObject() && args[1]->IsObject() && args[2]->IsObject() && args[3]->IsObject()) {
             Atom *atom0Obj = Atom::Unwrap(args[0]->ToObject());
             Atom *atom1Obj = Atom::Unwrap(args[1]->ToObject());
             Atom *atom2Obj = Atom::Unwrap(args[2]->ToObject());
@@ -402,7 +433,7 @@ namespace OBBinding {
 
         Mol *obj = Unwrap(args.This());
 
-        if(args[0]->IsObject() && args[1]->IsObject() && args[2]->IsObject()) {
+        if (args[0]->IsObject() && args[1]->IsObject() && args[2]->IsObject()) {
             Atom *atom0Obj = Atom::Unwrap(args[0]->ToObject());
             Atom *atom1Obj = Atom::Unwrap(args[1]->ToObject());
             Atom *atom2Obj = Atom::Unwrap(args[2]->ToObject());
@@ -418,7 +449,7 @@ namespace OBBinding {
         Mol *obj = Unwrap(args.This());
 
         double pH = 7.4;
-        if(args[0]->IsNumber()) {
+        if (args[0]->IsNumber()) {
             pH = args[0]->NumberValue();
         }
 

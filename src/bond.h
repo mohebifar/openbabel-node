@@ -64,6 +64,7 @@ namespace OBBinding {
         static NAN_METHOD(IsCisOrTrans);
 
         static Persistent <Function> constructor;
+        static Stack container;
 
     };
 

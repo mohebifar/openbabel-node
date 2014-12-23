@@ -56,7 +56,6 @@ namespace OBBinding {
         static NAN_METHOD(HasAromaticCorrected);
         static NAN_METHOD(AddHydrogens);
         static NAN_METHOD(DeleteHydrogens);
-        static NAN_METHOD(GetAtoms);
         static NAN_METHOD(ForEachAtom);
         static NAN_METHOD(ForEachBond);
         static NAN_METHOD(CreateAtom);
@@ -71,8 +70,10 @@ namespace OBBinding {
         static NAN_METHOD(CorrectForPH);
         static NAN_METHOD(Has2D);
         static NAN_METHOD(Has3D);
-
         static NAN_GETTER(GetMolWeight);
+
+        static NAN_GETTER(GetAtoms);
+        static NAN_INDEX_GETTER(GetAtomByIndex);
         static NAN_GETTER(GetExactMass);
         static NAN_GETTER(GetAtomsCount);
         static NAN_GETTER(GetBondsCount);
@@ -81,6 +82,7 @@ namespace OBBinding {
         static NAN_GETTER(GetTotalCharge);
         static NAN_GETTER(NumConformers);
 
+        static Persistent<ObjectTemplate> atomsTemplate;
         static Persistent <Function> constructor;
 
     };

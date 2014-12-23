@@ -1,3 +1,4 @@
+require('./lib/vector');
 require('./lib/atom');
 require('./lib/bond');
 

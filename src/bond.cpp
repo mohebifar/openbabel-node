@@ -6,6 +6,7 @@ using namespace OpenBabel;
 
 namespace OBBinding {
     Persistent<Function> Bond::constructor;
+    Stack Bond::container;
 
     Bond::Bond() {
 
@@ -22,6 +23,12 @@ namespace OBBinding {
 
     Local<Object> Bond::NewInstance(OBBond *bond) {
         NanEscapableScope();
+        for(unsigned int i = 0; i < container.size(); i++) {
+            Local<Object> ins = Local<Object>::New(container.at(0));
+            if(Unwrap(ins)->ob == bond) {
+                return ins;
+            }
+        }
 
         const unsigned argc = 0;
         Local<Value> argv[argc] = {};
@@ -84,6 +91,7 @@ namespace OBBinding {
 
         Bond *obj = new Bond();
         obj->Wrap(args.This());
+        container.push_back(Persistent<Object>::New(args.This()));
 
         NanReturnValue(args.This());
     }

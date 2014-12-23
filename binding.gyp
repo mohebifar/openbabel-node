@@ -3,9 +3,9 @@
     {
       "target_name": "openbabel",
       "sources": [
-        "src/bond.cpp",
         "src/atom.cpp",
         "src/mol.cpp",
+        "src/bond.cpp",
         "src/addon.cpp",
         "src/forcefield.cpp",
         "src/builder.cpp",
