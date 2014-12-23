@@ -28,6 +28,7 @@
     "gulp": "^3.8.10",
     "gulp-jshint": "^1.9.0",
     "gulp-mocha": "^2.0.0",
+    "gulp-sync": "^0.1.4",
     "gulp-yuidoc": "^0.1.2",
     "jshint-stylish": "^1.0.0"
   }
