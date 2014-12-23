@@ -1,4 +1,4 @@
-[![NPM version](http://img.shields.io/npm/v/openbabel.svg?style=flat)](https://www.npmjs.org/package/openbabel) [![Travis build status](http://img.shields.io/travis/mohebifar/openbabel-node/master.svg?style=flat)](https://travis-ci.org/mohebifar/openbabel-node) [![Dependency Status](https://david-dm.org/mohebifar/openbabel-node.svg?style=flat)](https://david-dm.org/mohebifar/openbabel-node)
+[![NPM version](http://img.shields.io/npm/v/openbabel.svg?style=flat)](https://www.npmjs.org/package/openbabel) [![Travis build status](http://img.shields.io/travis/mohebifar/openbabel-node/master.svg?style=flat)](https://travis-ci.org/mohebifar/openbabel-node) [![Dependency Status](https://david-dm.org/mohebifar/openbabel-node.svg?style=flat)](https://david-dm.org/mohebifar/openbabel-node) [![npm](https://img.shields.io/npm/dm/openbabel.svg?style=flat)]() [![npm](https://img.shields.io/npm/l/openbabel.svg?style=flat)]()
 
 **Open Babel** Binding for Node.js
 
