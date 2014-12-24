@@ -26,7 +26,7 @@ namespace OBBinding {
         for(unsigned int i = 0; i < container.size(); i++) {
             Local<Object> ins = Local<Object>::New(container.at(0));
             if(Unwrap(ins)->ob == bond) {
-                return ins;
+                return NanEscapeScope(ins);
             }
         }
 
