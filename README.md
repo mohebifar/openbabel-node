@@ -92,3 +92,6 @@ Call one of `systematicRotorSearch`, `randomRotorSearch`, `weightedRotorSearch`.
     console.log(ff.energy); // Before getting conformer
     ff.systematicRotorSearch();
     console.log(ff.energy); // After getting conformer
+
+
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mohebifar/openbabel-node?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
