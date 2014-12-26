@@ -12,6 +12,7 @@
 #include <openbabel/atom.h>
 #include "common.h"
 #include "mol.h"
+#include "data.h"
 
 using namespace v8;
 using namespace OpenBabel;
@@ -29,7 +30,6 @@ namespace OBBinding {
         static Atom *Unwrap(Local<Object> obj);
 
         OBAtom *ob;
-        Mol *parent;
 
     private:
         Atom();
@@ -71,6 +71,8 @@ namespace OBBinding {
         static NAN_METHOD(CountBondsOfOrder);
 
         static NAN_METHOD(MatchesSMARTS);
+
+        static NAN_METHOD(GetData);
 
         static NAN_GETTER(GetIndex);
 

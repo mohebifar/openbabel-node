@@ -373,4 +373,23 @@ namespace OBBinding {
         NanReturnValue(NanNew(obj->ob->GetBondOrder()));
     }
 
+    NAN_METHOD(Bond::GetData) {
+        NanScope();
+
+        if(args[0]->IsString()) {
+            const char* name = ToConstChar(args[0]->ToString());
+            Bond *obj = Unwrap(args.This());
+            OBGenericData *d = obj->ob->GetData(name);
+            if(d != NULL) {
+                Local <Object> data = Data::NewInstance(d);
+                NanReturnValue(data);
+            } else {
+                std::string error = "The given data is not set: " + std::string(name);
+                NanReturnValue(NanThrowError(error.c_str()));
+            }
+        } else {
+            NanReturnValue(NanThrowError("1 Argument is required."));
+        }
+    }
+
 }

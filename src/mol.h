@@ -70,6 +70,7 @@ namespace OBBinding {
         static NAN_METHOD(CorrectForPH);
         static NAN_METHOD(Has2D);
         static NAN_METHOD(Has3D);
+        static NAN_METHOD(GetData);
         static NAN_GETTER(GetMolWeight);
 
         static NAN_GETTER(GetAtoms);

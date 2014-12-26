@@ -5,6 +5,7 @@
 #include "forcefield.h"
 #include "builder.h"
 #include "bond.h"
+#include "data.h"
 
 using namespace v8;
 using namespace OpenBabel;
@@ -18,6 +19,7 @@ void InitAll(Handle<Object> exports) {
     OBBinding::ForceField::Init(exports);
     OBBinding::Builder::Init(exports);
     OBBinding::Bond::Init(exports);
+    OBBinding::Data::Init(exports);
 
     InitLineSearchType(exports);
 }

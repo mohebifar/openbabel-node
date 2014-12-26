@@ -63,6 +63,8 @@ namespace OBBinding {
         static NAN_METHOD(IsWedgeOrHash);
         static NAN_METHOD(IsCisOrTrans);
 
+        static NAN_METHOD(GetData);
+
         static Persistent <Function> constructor;
         static Stack container;
 

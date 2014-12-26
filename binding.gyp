@@ -4,6 +4,7 @@
       "target_name": "openbabel",
       "sources": [
         "src/atom.cpp",
+        "src/data.cpp",
         "src/mol.cpp",
         "src/bond.cpp",
         "src/addon.cpp",

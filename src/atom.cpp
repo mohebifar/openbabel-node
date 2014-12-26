@@ -67,6 +67,7 @@ namespace OBBinding {
         tpl->PrototypeTemplate()->Set(NanNew("forEachNeighbour"), NanNew < FunctionTemplate > (ForEachNeighbour)->GetFunction());
         tpl->PrototypeTemplate()->Set(NanNew("getDistance"), NanNew < FunctionTemplate > (GetDistance)->GetFunction());
         tpl->PrototypeTemplate()->Set(NanNew("matchesSMARTS"), NanNew < FunctionTemplate > (MatchesSMARTS)->GetFunction());
+        tpl->PrototypeTemplate()->Set(NanNew("getData"), NanNew < FunctionTemplate > (GetData)->GetFunction());
 
         // Properties
         tpl->PrototypeTemplate()->SetAccessor(NanNew("atomicNumber"), GetAtomicNumber, SetAtomicNumber);
@@ -137,6 +138,25 @@ namespace OBBinding {
         Atom *obj = Unwrap(args.This());
 
         NanReturnValue(NanNew(obj->ob->IsInRing()));
+    }
+
+    NAN_METHOD(Atom::GetData) {
+        NanScope();
+
+        if(args[0]->IsString()) {
+            const char* name = ToConstChar(args[0]->ToString());
+            Atom *obj = Unwrap(args.This());
+            OBGenericData *d = obj->ob->GetData(name);
+            if(d != NULL) {
+                Local <Object> data = Data::NewInstance(d);
+                NanReturnValue(data);
+            } else {
+                std::string error = "The given data is not set: " + std::string(name);
+                NanReturnValue(NanThrowError(error.c_str()));
+            }
+        } else {
+            NanReturnValue(NanThrowError("1 Argument is required."));
+        }
     }
 
     NAN_METHOD(Atom::IsCarboxylOxygen) {
