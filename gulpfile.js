@@ -4,7 +4,6 @@ var jshint = require('gulp-jshint');
 var mocha = require('gulp-mocha');
 var stylish = require('jshint-stylish');
 var gulpsync = require('gulp-sync')(gulp);
-var jsdoc = require("gulp-jsdoc");
 
 gulp.task('lint', function() {
     return gulp.src('lib/*.js')
