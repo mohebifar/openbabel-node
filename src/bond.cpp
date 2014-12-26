@@ -23,9 +23,9 @@ namespace OBBinding {
 
     Local<Object> Bond::NewInstance(OBBond *bond) {
         NanEscapableScope();
-        for(unsigned int i = 0; i < container.size(); i++) {
-            Local<Object> ins = Local<Object>::New(container.at(0));
-            if(Unwrap(ins)->ob == bond) {
+        for (unsigned int i = 0; i < container.size(); i++) {
+            Local<Object> ins = Local<Object>::New(container.at(i));
+            if (Unwrap(ins)->ob == bond) {
                 return NanEscapeScope(ins);
             }
         }
@@ -106,7 +106,8 @@ namespace OBBinding {
 
             NanReturnThis();
         } else {
-            NanReturnValue(NanThrowError("1 Argument of type double is required."));
+            NanThrowError("1 Argument of type double is required.");
+            NanReturnUndefined();
         }
     }
 
@@ -129,7 +130,8 @@ namespace OBBinding {
 
             NanReturnThis();
         } else {
-            NanReturnValue(NanThrowError("1 Argument of type Atom is required."));
+            NanThrowError("1 Argument of type Atom is required.");
+            NanReturnUndefined();
         }
     }
 
@@ -144,7 +146,8 @@ namespace OBBinding {
 
             NanReturnThis();
         } else {
-            NanReturnValue(NanThrowError("1 Argument of type Atom is required."));
+            NanThrowError("1 Argument of type Atom is required.");
+            NanReturnUndefined();
         }
     }
 
@@ -362,7 +365,8 @@ namespace OBBinding {
             obj->ob->SetBondOrder(order);
             NanReturnThis();
         } else {
-            NanReturnValue(NanThrowError("1 Argument of type integer is required."));
+            NanThrowError("1 Argument of type integer is required.");
+            NanReturnUndefined();
         }
     }
 
@@ -376,19 +380,21 @@ namespace OBBinding {
     NAN_METHOD(Bond::GetData) {
         NanScope();
 
-        if(args[0]->IsString()) {
-            const char* name = ToConstChar(args[0]->ToString());
+        if (args[0]->IsString()) {
+            const char *name = ToConstChar(args[0]->ToString());
             Bond *obj = Unwrap(args.This());
             OBGenericData *d = obj->ob->GetData(name);
-            if(d != NULL) {
-                Local <Object> data = Data::NewInstance(d);
+            if (d != NULL) {
+                Local<Object> data = Data::NewInstance(d);
                 NanReturnValue(data);
             } else {
                 std::string error = "The given data is not set: " + std::string(name);
-                NanReturnValue(NanThrowError(error.c_str()));
+                NanThrowError(error.c_str());
+                NanReturnUndefined();
             }
         } else {
-            NanReturnValue(NanThrowError("1 Argument is required."));
+            NanThrowError("1 Argument is required.");
+            NanReturnUndefined();
         }
     }
 

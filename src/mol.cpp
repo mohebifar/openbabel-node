@@ -321,7 +321,8 @@ namespace OBBinding {
         if (atom != NULL) {
             NanReturnValue(Atom::NewInstance(atom));
         } else {
-            NanReturnValue(NanThrowError("Atom with given index not found."));
+            NanThrowError("Atom with given index not found.");
+            NanReturnUndefined();
         }
 
     }
@@ -338,7 +339,8 @@ namespace OBBinding {
         if (bond != NULL) {
             NanReturnValue(Bond::NewInstance(bond));
         } else {
-            NanReturnValue(NanThrowError("Bond with given index not found."));
+            NanThrowError("Bond with given index not found.");
+            NanReturnUndefined();
         }
 
     }
@@ -379,7 +381,8 @@ namespace OBBinding {
             NanReturnValue(NanNew(obj->ob->AddAtom(*atomObj->ob)));
 
         } else {
-            NanReturnValue(NanThrowError("1 Arguments of type Atom is required."));
+            NanThrowError("1 Arguments of type Atom is required.");
+            NanReturnUndefined();
         }
     }
 
@@ -394,7 +397,8 @@ namespace OBBinding {
             NanReturnValue(NanNew(obj->ob->DeleteAtom(atomObj->ob)));
 
         } else {
-            NanReturnValue(NanThrowError("1 Arguments of type Atom is required."));
+            NanThrowError("1 Arguments of type Atom is required.");
+            NanReturnUndefined();
         }
     }
 
@@ -420,7 +424,8 @@ namespace OBBinding {
             NanReturnValue(NanNew(obj->ob->AddBond(*bondObj->ob)));
 
         } else {
-            NanReturnValue(NanThrowError("1 Arguments of type Atom is required."));
+            NanThrowError("1 Arguments of type Atom is required.");
+            NanReturnUndefined();
         }
     }
 
@@ -435,7 +440,8 @@ namespace OBBinding {
             NanReturnValue(NanNew(obj->ob->DeleteBond(bondObj->ob)));
 
         } else {
-            NanReturnValue(NanThrowError("1 Arguments of type Atom is required."));
+            NanThrowError("1 Arguments of type Atom is required.");
+            NanReturnUndefined();
         }
     }
 
@@ -451,7 +457,8 @@ namespace OBBinding {
             Atom *atom3Obj = Atom::Unwrap(args[3]->ToObject());
             NanReturnValue(NanNew(obj->ob->GetTorsion(atom0Obj->ob, atom1Obj->ob, atom2Obj->ob, atom3Obj->ob)));
         } else {
-            NanReturnValue(NanThrowError("4 Arguments of type Atom is required."));
+            NanThrowError("4 Arguments of type Atom is required.");
+            NanReturnUndefined();
         }
     }
 
@@ -466,7 +473,8 @@ namespace OBBinding {
             Atom *atom2Obj = Atom::Unwrap(args[2]->ToObject());
             NanReturnValue(NanNew(obj->ob->GetAngle(atom0Obj->ob, atom1Obj->ob, atom2Obj->ob)));
         } else {
-            NanReturnValue(NanThrowError("4 Arguments of type Atom is required."));
+            NanThrowError("4 Arguments of type Atom is required.");
+            NanReturnUndefined();
         }
     }
 
@@ -567,10 +575,12 @@ namespace OBBinding {
                 NanReturnValue(data);
             } else {
                 std::string error = "The given data is not set: " + std::string(name);
-                NanReturnValue(NanThrowError(error.c_str()));
+                NanThrowError(error.c_str());
+                NanReturnUndefined();
             }
         } else {
-            NanReturnValue(NanThrowError("1 Argument is required."));
+            NanThrowError("1 Argument is required.");
+            NanReturnUndefined();
         }
     }
 

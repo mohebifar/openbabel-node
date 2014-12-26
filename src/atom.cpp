@@ -24,7 +24,7 @@ namespace OBBinding {
     Local <Object> Atom::NewInstance(OBAtom *atom) {
         NanEscapableScope();
         for(unsigned int i = 0; i < container.size(); i++) {
-            Local<Object> ins = Local<Object>::New(container.at(0));
+            Local<Object> ins = NanNew<Object>(container.at(i));
             if(Unwrap(ins)->ob == atom) {
                 return NanEscapeScope(ins);
             }
@@ -78,6 +78,7 @@ namespace OBBinding {
 
         NanAssignPersistent(constructor, tpl->GetFunction());
         exports->Set(NanNew("Atom"), tpl->GetFunction());
+
     }
 
     NAN_METHOD(Atom::New) {
@@ -85,7 +86,8 @@ namespace OBBinding {
 
         Atom *obj = new Atom();
         obj->Wrap(args.This());
-        container.push_back(Persistent<Object>::New(args.This()));
+        container.resize(container.size() + 1);
+        NanAssignPersistent(container.at(container.size() - 1), args.This());
 
         NanReturnValue(args.This());
     }
@@ -97,10 +99,10 @@ namespace OBBinding {
 
         if(args[0]->IsObject()) {
             Atom *atomObj = Atom::Unwrap(args[0]->ToObject());
-
             NanReturnValue(NanNew(obj->ob->GetDistance(atomObj->ob)));
         } else {
-            NanReturnValue(NanThrowError("1 Arguments of type Atom is required."));
+            NanThrowError("1 Arguments of type Atom is required.");
+            NanReturnUndefined();
         }
     }
 
@@ -114,7 +116,8 @@ namespace OBBinding {
 
             NanReturnValue(NanNew(obj->ob->HasBondOfOrder(order)));
         } else {
-            NanReturnValue(NanThrowError("1 Arguments is required."));
+            NanThrowError("1 Arguments is required.");
+            NanReturnUndefined();
         }
     }
 
@@ -128,7 +131,8 @@ namespace OBBinding {
 
             NanReturnValue(NanNew(obj->ob->CountBondsOfOrder(order)));
         } else {
-            NanReturnValue(NanThrowError("1 Arguments is required."));
+            NanThrowError("1 Arguments is required.");
+            NanReturnUndefined();
         }
     }
 
@@ -152,10 +156,12 @@ namespace OBBinding {
                 NanReturnValue(data);
             } else {
                 std::string error = "The given data is not set: " + std::string(name);
-                NanReturnValue(NanThrowError(error.c_str()));
+                NanThrowError(error.c_str());
+                NanReturnUndefined();
             }
         } else {
-            NanReturnValue(NanThrowError("1 Argument is required."));
+            NanThrowError("1 Argument is required.");
+            NanReturnUndefined();
         }
     }
 
@@ -241,7 +247,8 @@ namespace OBBinding {
 
             NanReturnValue(NanNew(obj->ob->IsConnected(atomObj->ob)));
         } else {
-            NanReturnValue(NanThrowError("1 Arguments of type Atom is required."));
+            NanThrowError("1 Arguments of type Atom is required.");
+            NanReturnUndefined();
         }
     }
 
@@ -254,7 +261,8 @@ namespace OBBinding {
             const char *str = ToConstChar(args[0]->ToString());
             NanReturnValue(NanNew(obj->ob->MatchesSMARTS(str)));
         } else {
-            NanReturnValue(NanThrowError("1 Arguments of type string is required."));
+            NanThrowError("1 Arguments of type string is required.");
+            NanReturnUndefined();
         }
     }
 

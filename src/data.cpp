@@ -24,7 +24,7 @@ namespace OBBinding {
     Local <Object> Data::NewInstance(OBGenericData *data) {
         NanEscapableScope();
         for(unsigned int i = 0; i < container.size(); i++) {
-            Local<Object> ins = Local<Object>::New(container.at(0));
+            Local<Object> ins = Local<Object>::New(container.at(i));
             if(Unwrap(ins)->ob == data) {
                 return NanEscapeScope(ins);
             }

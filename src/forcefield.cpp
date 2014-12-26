@@ -5,7 +5,7 @@ using namespace v8;
 using namespace OpenBabel;
 
 namespace OBBinding {
-    Persistent <Function> ForceField::constructor;
+    Persistent<Function> ForceField::constructor;
 
     ForceField::ForceField() {
 
@@ -14,16 +14,16 @@ namespace OBBinding {
     ForceField::~ForceField() {
     }
 
-    ForceField* ForceField::Unwrap(Local < Object > obj) {
+    ForceField *ForceField::Unwrap(Local<Object> obj) {
         ForceField *forcefield = node::ObjectWrap::Unwrap<ForceField>(obj);
         return forcefield;
     }
 
-    void ForceField::Init(Handle < Object > exports) {
+    void ForceField::Init(Handle<Object> exports) {
         NanScope();
 
         // Prepare constructor template
-        Local <FunctionTemplate> tpl = NanNew < FunctionTemplate > (New);
+        Local<FunctionTemplate> tpl = NanNew < FunctionTemplate > (New);
         tpl->SetClassName(NanNew("ForceField"));
         tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
@@ -50,20 +50,20 @@ namespace OBBinding {
         tpl->PrototypeTemplate()->SetAccessor(NanNew("energy"), GetEnergy);
 
         // Static Methods
-        tpl->Set("findForceField", NanNew<FunctionTemplate>(FindForceField)->GetFunction());
+        tpl->Set("findForceField", NanNew < FunctionTemplate > (FindForceField)->GetFunction());
 
         NanAssignPersistent(constructor, tpl->GetFunction());
         exports->Set(NanNew("ForceField"), tpl->GetFunction());
     }
 
-    Local <Object> ForceField::NewInstance(OBForceField *forcefield) {
+    Local<Object> ForceField::NewInstance(OBForceField *forcefield) {
         NanEscapableScope();
 
-        Local <Function> cons = NanNew < Function > (constructor);
-        Local <Object> instance;
+        Local<Function> cons = NanNew < Function > (constructor);
+        Local<Object> instance;
 
         const unsigned argc = 0;
-        Local <Value> argv[argc] = {};
+        Local<Value> argv[argc] = {};
         instance = cons->NewInstance(argc, argv);
 
 
@@ -103,7 +103,7 @@ namespace OBBinding {
 
         unsigned int steps;
 
-        if(args[0]->IsNumber()) {
+        if (args[0]->IsNumber()) {
             steps = args[1]->NumberValue();
         } else {
             steps = 2500;
@@ -120,7 +120,7 @@ namespace OBBinding {
 
         unsigned int steps;
 
-        if(args[0]->IsNumber()) {
+        if (args[0]->IsNumber()) {
             steps = args[1]->NumberValue();
         } else {
             steps = 2500;
@@ -136,7 +136,7 @@ namespace OBBinding {
 
         unsigned int steps;
 
-        if(args[0]->IsNumber()) {
+        if (args[0]->IsNumber()) {
             steps = args[1]->NumberValue();
         } else {
             steps = 2500;
@@ -150,11 +150,11 @@ namespace OBBinding {
     NAN_METHOD(ForceField::RandomRotorSearch) {
         NanEscapableScope();
 
-        if(args[0]->IsNumber()) {
+        if (args[0]->IsNumber()) {
             unsigned int conformers = args[0]->NumberValue();
             unsigned int steps;
 
-            if(args[1]->IsNumber()) {
+            if (args[1]->IsNumber()) {
                 steps = args[1]->NumberValue();
             } else {
                 steps = 2500;
@@ -165,7 +165,8 @@ namespace OBBinding {
 
             NanReturnThis();
         } else {
-            NanReturnValue(NanThrowError("First argument is required and should be a number."));
+            NanThrowError("First argument is required and should be a number.");
+            NanReturnUndefined();
         }
     }
 
@@ -174,7 +175,7 @@ namespace OBBinding {
 
         unsigned int steps;
 
-        if(args[0]->IsNumber()) {
+        if (args[0]->IsNumber()) {
             steps = args[1]->NumberValue();
         } else {
             steps = 2500;
@@ -191,7 +192,7 @@ namespace OBBinding {
 
         unsigned int steps;
 
-        if(args[0]->IsNumber()) {
+        if (args[0]->IsNumber()) {
             steps = args[1]->NumberValue();
         } else {
             steps = 2500;
@@ -205,11 +206,11 @@ namespace OBBinding {
     NAN_METHOD(ForceField::WeightedRotorSearch) {
         NanEscapableScope();
 
-        if(args[0]->IsNumber()) {
+        if (args[0]->IsNumber()) {
             unsigned int conformers = args[0]->NumberValue();
             unsigned int steps;
 
-            if(args[1]->IsNumber()) {
+            if (args[1]->IsNumber()) {
                 steps = args[1]->NumberValue();
             } else {
                 steps = 2500;
@@ -220,14 +221,15 @@ namespace OBBinding {
 
             NanReturnThis();
         } else {
-            NanReturnValue(NanThrowError("First argument is required and should be a number."));
+            NanThrowError("First argument is required and should be a number.");
+            NanReturnUndefined();
         }
     }
 
     NAN_METHOD(ForceField::SetLineSearchType) {
         NanEscapableScope();
 
-        if(args[0]->IsNumber()) {
+        if (args[0]->IsNumber()) {
             int type = args[0]->NumberValue();
 
             ForceField *obj = Unwrap(args.Holder());
@@ -235,7 +237,8 @@ namespace OBBinding {
 
             NanReturnThis();
         } else {
-            NanReturnValue(NanThrowError("First argument is required and should be a number."));
+            NanThrowError("First argument is required and should be a number.");
+            NanReturnUndefined();
         }
     }
 
@@ -257,7 +260,8 @@ namespace OBBinding {
 
             NanReturnValue(NanNew(obj->ob->GetAtomTypes(*molObj->ob)));
         } else {
-            NanReturnValue(NanThrowError("1 Argument of type Mol is required."));
+            NanThrowError("1 Argument of type Mol is required.");
+            NanReturnUndefined();
         }
 
     }
@@ -272,7 +276,8 @@ namespace OBBinding {
 
             NanReturnValue(NanNew(obj->ob->GetPartialCharges(*molObj->ob)));
         } else {
-            NanReturnValue(NanThrowError("1 Argument of type Mol is required."));
+            NanThrowError("1 Argument of type Mol is required.");
+            NanReturnUndefined();
         }
     }
 
@@ -287,7 +292,8 @@ namespace OBBinding {
 
             NanReturnValue(NanNew(obj->ob->GetCoordinates(*molObj->ob)));
         } else {
-            NanReturnValue(NanThrowError("1 Argument of type Mol is required."));
+            NanThrowError("1 Argument of type Mol is required.");
+            NanReturnUndefined();
         }
     }
 
@@ -302,7 +308,8 @@ namespace OBBinding {
 
             NanReturnValue(NanNew(obj->ob->GetConformers(*molObj->ob)));
         } else {
-            NanReturnValue(NanThrowError("1 Argument of type Mol is required."));
+            NanThrowError("1 Argument of type Mol is required.");
+            NanReturnUndefined();
         }
     }
 
@@ -317,7 +324,8 @@ namespace OBBinding {
 
             NanReturnValue(NanNew(obj->ob->SetCoordinates(*molObj->ob)));
         } else {
-            NanReturnValue(NanThrowError("1 Argument of type Mol is required."));
+            NanThrowError("1 Argument of type Mol is required.");
+            NanReturnUndefined();
         }
     }
 
@@ -332,7 +340,8 @@ namespace OBBinding {
 
             NanReturnValue(NanNew(obj->ob->SetConformers(*molObj->ob)));
         } else {
-            NanReturnValue(NanThrowError("1 Argument of type Mol is required."));
+            NanThrowError("1 Argument of type Mol is required.");
+            NanReturnUndefined();
         }
     }
 
@@ -345,7 +354,8 @@ namespace OBBinding {
             obj->ob->EnableCutOff(args[0]->BooleanValue());
             NanReturnThis();
         } else {
-            NanReturnValue(NanThrowError("1 Argument is required."));
+            NanThrowError("1 Argument is required.");
+            NanReturnUndefined();
         }
     }
 
@@ -372,7 +382,7 @@ namespace OBBinding {
         std::string str = std::string(*v8::String::AsciiValue(args[0]->ToString()));
 
         OBForceField *forcefield = OBForceField::FindForceField(str.c_str());
-        Handle <Object> instance = NewInstance(forcefield);
+        Handle<Object> instance = NewInstance(forcefield);
 
         NanReturnValue(instance);
     }
