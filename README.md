@@ -81,7 +81,7 @@ And also you can export it as a file :
 
 Create an instance of `ob.Conversion` using The `ob.Conversion.findForceField` factory :
 
-    var ff = ob.Conversion.findForceField();
+    var ff = ob.Conversion.findForceField('mmff94');
     ff.setup(mol);
     console.log(ff.energy);
     
