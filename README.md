@@ -99,4 +99,4 @@ Call one of `systematicRotorSearch`, `randomRotorSearch`, `weightedRotorSearch`.
 You can get data which is set for an atom by calling `getData` method such as `FFAtomType`.
 
     ff.prepareAtomTypes();
-    console.log(mol.atom[0].getData('FFAtomType'));
+    console.log(mol.atoms[0].getData('FFAtomType'));
