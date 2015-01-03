@@ -15,8 +15,9 @@ Open Babel is a chemical toolbox designed to speak the many languages of chemica
         * [Read chemical file formats](#usage-conversion-read-chemical-file-formats)
         * [Write chemical file formats](#usage-conversion-write-chemical-file-formats)
     * [ForceField](#usage-forcefield)
-        * [Energy Calculation](#usage-forcefield-energy-calculation)
+        * [Energy calculation](#usage-forcefield-energy-calculation)
         * [Conformers search](#usage-forcefield-conformers-search)
+        * [Atom types](#atom-types)
 
 
 <h1 id="installation">Installation</h1>
@@ -92,3 +93,10 @@ Call one of `systematicRotorSearch`, `randomRotorSearch`, `weightedRotorSearch`.
     console.log(ff.energy); // Before getting conformer
     ff.systematicRotorSearch();
     console.log(ff.energy); // After getting conformer
+    
+<h3 id="atom-types">Atom types</h3>
+
+You can get data which is set for an atom by calling `getData` method such as `FFAtomType`.
+
+    ff.prepareAtomTypes();
+    console.log(mol.atom[0].getData('FFAtomType'));
