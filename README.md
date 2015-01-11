@@ -9,6 +9,7 @@ Open Babel is a chemical toolbox designed to speak the many languages of chemica
 * [Contents](#contents)
 * [Installation](#installation)
     * [Linux](#linux)
+    * [OS X](#osx)
 * [Usage](#usage)
     * [Conversion](#usage-conversion)
         * [Read chemical file formats](#usage-conversion-read-chemical-file-formats)
@@ -29,6 +30,13 @@ First of all you should install `openbabel` with header files.
 
 Then you can easily install this package using `npm`
 
+    npm install openbabel
+    
+<h2 id="linux">OS X</h2>
+
+Install `openbabel` using `brew`
+
+    sudo brew install open-babel
     npm install openbabel
 
 <h1 id="usage">Usage</h1>
