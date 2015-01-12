@@ -15,7 +15,7 @@
       "defines": [
         "GCC_ENABLE_CPP_RTTI = YES"
       ],
-      "include_dirs": ["<!(node -e \"require('nan')\")", "/usr/local/lib/openbabel/2.3.2", "/usr/local/include/openbabel-2.0", "/usr/include/openbabel-2.0"],
+      "include_dirs": ["<!(node -e \"require('nan')\")", "/usr/local/lib/openbabel/2.3.2", "/usr/local/include/openbabel-2.0", "/usr/include/openbabel-2.0", "/usr/local/include/openbabel-2.0/openbabel"],
       "conditions": [
         ["OS=='win'", {
 
@@ -24,7 +24,13 @@
 
         }],
         ["OS=='mac'", {
-
+          "libraries": [
+            "-lopenbabel"
+          ],
+          "cflags": [
+            "-pipe"
+          ],
+          "cflags_cc!": [ "-fno-rtti" ]
         }],
         ["OS=='linux'", {
           "libraries": [
