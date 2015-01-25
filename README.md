@@ -26,18 +26,24 @@ Open Babel is a chemical toolbox designed to speak the many languages of chemica
 
 First of all you should install `openbabel` with header files.
 
-    sudo apt-get install libopenbabel-dev
+```bash
+sudo apt-get install libopenbabel-dev
+```
 
 Then you can easily install this package using `npm`
 
-    npm install openbabel
-    
+```bash
+npm install openbabel
+```
+
 <h2 id="linux">OS X</h2>
 
 Install `openbabel` using `brew`
 
-    sudo brew install open-babel
-    npm install openbabel
+```bash
+sudo brew install open-babel
+npm install openbabel
+```
 
 <h1 id="usage">Usage</h1>
 
@@ -45,8 +51,9 @@ Check the **[Documentation API](http://mohebifar.github.io/openbabel-node/api/)*
 
 Use the `openbabel` module in your project.
 
-    var ob = require('openbabel');
-    
+```js
+var ob = require('openbabel');
+```
 
 <h2 id="usage-conversion">Conversion</h2>
 
@@ -54,30 +61,38 @@ Use the `openbabel` module in your project.
 
 Create an instance of `ob.Conversion` :
 
-    var conversion = new ob.Conversion();
-    var mol = conversion.setInFormat('smiles').read('C1CCCC1');
-    console.log(mol.atomsCount);
-    
+```js
+var conversion = new ob.Conversion();
+var mol = conversion.setInFormat('smiles').read('C1CCCC1');
+console.log(mol.atomsCount);
+```
+
 And you can use `fs` to read chimcal data from files :
-    
-    var fs = require('fs');
-    
-    var data = readFileSync('methane.smiles');
-    var conversion = new ob.Conversion();
-    var mol = conversion.setInFormat('smiles').read(data);
-    console.log(mol.atomsCount);
-    
+
+```js
+var fs = require('fs');
+
+var data = readFileSync('methane.smiles');
+var conversion = new ob.Conversion();
+var mol = conversion.setInFormat('smiles').read(data);
+console.log(mol.atomsCount);
+```
+
 <h3 id="usage-conversion-write-chemical-file-formats">Write chemical file formats</h3>
 
 Use an `ob.Conversion` instance :
 
-    var str = conversion.setOutFormat('mol').write(mol);
-    console.log(str);
-    
+```js
+var str = conversion.setOutFormat('mol').write(mol);
+console.log(str);
+```
+
 And also you can export it as a file :
 
-    var str = conversion.setOutFormat('mol').write();
-    fs.writeFileSync('methane.mol', str);
+```js
+var str = conversion.setOutFormat('mol').write();
+fs.writeFileSync('methane.mol', str);
+```
 
 <h2 id="usage-forcefield">ForceField</h2>
 
@@ -85,21 +100,27 @@ And also you can export it as a file :
 
 Create an instance of `ob.Conversion` using The `ob.Conversion.findForceField` factory :
 
-    var ff = ob.Conversion.findForceField('mmff94');
-    ff.setup(mol);
-    console.log(ff.energy);
-    
+```js
+var ff = ob.Conversion.findForceField('mmff94');
+ff.setup(mol);
+console.log(ff.energy);
+```
+
 <h3 id="usage-forcefield-conformers-search">Conformers search</h3>
 
 Call one of `systematicRotorSearch`, `randomRotorSearch`, `weightedRotorSearch`. (Read more in [API](http://mohebifar.github.io/openbabel-node/api/))
 
-    console.log(ff.energy); // Before getting conformer
-    ff.systematicRotorSearch();
-    console.log(ff.energy); // After getting conformer
-    
+```js
+console.log(ff.energy); // Before getting conformer
+ff.systematicRotorSearch();
+console.log(ff.energy); // After getting conformer
+```
+
 <h3 id="atom-types">Atom types</h3>
 
 You can get data which is set for an atom by calling `getData` method such as `FFAtomType`.
 
-    ff.prepareAtomTypes();
-    console.log(mol.atoms[0].getData('FFAtomType'));
+```js
+ff.prepareAtomTypes();
+console.log(mol.atoms[0].getData('FFAtomType'));
+```
