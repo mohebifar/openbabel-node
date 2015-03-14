@@ -41,7 +41,7 @@ npm install openbabel
 Install `openbabel` using `brew`
 
 ```bash
-sudo brew install open-babel
+brew install open-babel
 npm install openbabel
 ```
 
