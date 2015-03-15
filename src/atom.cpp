@@ -29,6 +29,7 @@ namespace OBBinding {
                 return NanEscapeScope(ins);
             }
         }
+
         const unsigned argc = 0;
         Local <Value> argv[argc] = {};
         Local <Function> cons = NanNew<Function>(constructor);

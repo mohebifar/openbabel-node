@@ -16,24 +16,25 @@ namespace OBBinding {
         delete ob;
     }
 
-    Bond *Bond::Unwrap(Local<Object> obj) {
+    Bond* Bond::Unwrap(Local < Object > obj) {
         Bond *bond = node::ObjectWrap::Unwrap<Bond>(obj);
         return bond;
     }
 
-    Local<Object> Bond::NewInstance(OBBond *bond) {
+    Local <Object> Bond::NewInstance(OBBond *bond) {
         NanEscapableScope();
-        for (unsigned int i = 0; i < container.size(); i++) {
-            Local<Object> ins = Local<Object>::New(container.at(i));
-            if (Unwrap(ins)->ob == bond) {
+
+        for(unsigned int i = 0; i < container.size(); i++) {
+            Local<Object> ins = NanNew<Object>(container.at(i));
+            if(Unwrap(ins)->ob == bond) {
                 return NanEscapeScope(ins);
             }
         }
 
         const unsigned argc = 0;
-        Local<Value> argv[argc] = {};
-        Local<Function> cons = NanNew < Function > (constructor);
-        Local<Object> instance = cons->NewInstance(argc, argv);
+        Local <Value> argv[argc] = {};
+        Local <Function> cons = NanNew<Function>(constructor);
+        Local <Object> instance = cons->NewInstance(argc, argv);
 
         Bond *obj = Unwrap(instance);
         obj->ob = bond;
