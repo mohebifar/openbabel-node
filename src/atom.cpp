@@ -74,7 +74,7 @@ namespace OBBinding {
         tpl->PrototypeTemplate()->SetAccessor(NanNew("_x"), GetX, SetX);
         tpl->PrototypeTemplate()->SetAccessor(NanNew("_y"), GetY, SetY);
         tpl->PrototypeTemplate()->SetAccessor(NanNew("_z"), GetZ, SetZ);
-        tpl->PrototypeTemplate()->SetAccessor(NanNew("index"), GetIndex);
+        tpl->PrototypeTemplate()->SetAccessor(NanNew("index"), GetIndex, SetIndex);
 
         NanAssignPersistent(constructor, tpl->GetFunction());
         exports->Set(NanNew("Atom"), tpl->GetFunction());
@@ -288,6 +288,16 @@ namespace OBBinding {
 
         Atom *obj = Unwrap(args.This());
         NanReturnValue(NanNew(obj->ob->GetIdx()));
+    }
+
+    NAN_SETTER(Atom::SetIndex) {
+        NanScope();
+
+        if(value->IsNumber()) {
+            Atom *obj = Unwrap(args.This());
+            const int v = value->NumberValue();
+            obj->ob->SetIdx(v);
+        }
     }
 
     NAN_METHOD(Atom::ForEachBond) {

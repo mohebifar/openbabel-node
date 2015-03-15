@@ -76,6 +76,8 @@ namespace OBBinding {
 
         static NAN_GETTER(GetIndex);
 
+        static NAN_SETTER(SetIndex);
+
         static NAN_GETTER(GetAtomicNumber);
 
         static NAN_SETTER(SetAtomicNumber);
