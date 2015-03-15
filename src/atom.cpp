@@ -9,7 +9,7 @@ namespace OBBinding {
     Stack Atom::container;
 
     Atom::Atom() {
-
+        ob = new OBAtom();
     }
 
     Atom::~Atom() {

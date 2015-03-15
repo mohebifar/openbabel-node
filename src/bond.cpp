@@ -9,7 +9,7 @@ namespace OBBinding {
     Stack Bond::container;
 
     Bond::Bond() {
-
+        ob  = new OBBond();
     }
 
     Bond::~Bond() {
