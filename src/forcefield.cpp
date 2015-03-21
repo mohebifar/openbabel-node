@@ -12,6 +12,7 @@ namespace OBBinding {
     }
 
     ForceField::~ForceField() {
+        delete ob;
     }
 
     ForceField *ForceField::Unwrap(Local<Object> obj) {

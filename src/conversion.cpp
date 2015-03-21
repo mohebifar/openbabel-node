@@ -11,6 +11,7 @@ namespace OBBinding {
     }
 
     Conversion::~Conversion() {
+        delete ob;
     }
 
     Conversion *Conversion::Unwrap(Local<Object> obj) {
